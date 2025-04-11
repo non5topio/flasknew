@@ -617,6 +617,1011 @@ Coverage XML written to file coverage.xml
                 </td>
             </tr>
             
+            <tr>
+                <td class="status-PASS">PASS</td>
+                <td></td>
+                <td>0</td>
+                <td>python</td>
+                <td>
+                    <details>
+                        <summary>View Full Code</summary>
+                        <pre><code><span class="diff-unchanged">  import unittest</span>
+<span class="diff-unchanged">  from app import app</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  class AppTests(unittest.TestCase):</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def setUp(self):</span>
+<span class="diff-unchanged">          # Set up the test client</span>
+<span class="diff-unchanged">          self.app = app.test_client()</span>
+<span class="diff-unchanged">          self.app.testing = True</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home(self):</span>
+<span class="diff-unchanged">          # Test the home route</span>
+<span class="diff-unchanged">          response = self.app.get('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_content_type(self):</span>
+<span class="diff-unchanged">          # Test the Content-Type header for the home route</span>
+<span class="diff-unchanged">          response = self.app.get('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.content_type, 'application/json')</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_delete_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test DELETE method on the home route</span>
+<span class="diff-unchanged">          response = self.app.delete('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_put_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test PUT method on the home route</span>
+<span class="diff-unchanged">          response = self.app.put('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_post_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test POST method on the home route</span>
+<span class="diff-unchanged">          response = self.app.post('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          # Check that Allow header indicates GET is allowed (and potentially HEAD, OPTIONS)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_with_query_params(self):</span>
+<span class="diff-unchanged">          # Test the home route with unexpected query parameters</span>
+<span class="diff-unchanged">          response = self.app.get('/?param1=value1&param2=value2')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_nonexistent_route(self):</span>
+<span class="diff-unchanged">          # Test accessing a non-existent route</span>
+<span class="diff-unchanged">          response = self.app.get('/nonexistent_route')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 404)</span>
+<span class="diff-unchanged">          # Optionally, check for specific content in the 404 page if customized</span>
+<span class="diff-unchanged">          # self.assertIn(b"Not Found", response.data) # Flask's default 404 page contains this</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-added">+     def test_home_options_method(self):</span>
+<span class="diff-added">+         # Test OPTIONS method on the home route</span>
+<span class="diff-added">+         response = self.app.options('/')</span>
+<span class="diff-added">+         self.assertEqual(response.status_code, 200)</span>
+<span class="diff-added">+         # Check that Allow header indicates GET is allowed</span>
+<span class="diff-added">+         self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-added">+         # Verify other common methods in the Allow header</span>
+<span class="diff-added">+         self.assertIn('HEAD', response.headers.get('Allow', ''))</span>
+<span class="diff-added">+         self.assertIn('OPTIONS', response.headers.get('Allow', ''))</span>
+<span class="diff-added">+ </span>
+<span class="diff-added">+ </span>
+<span class="diff-unchanged">  if __name__ == '__main__':</span>
+<span class="diff-unchanged">      unittest.main()</span></code></pre>
+                    </details>
+                </td>
+                <td>
+                    <details>
+                        <summary>View More</summary>
+                        <div><strong>STDERR:</strong> <pre><code class="language-python"></code></pre></div>
+                        <div><strong>STDOUT:</strong> <pre><code class="language-python">============================= test session starts ==============================
+platform linux -- Python 3.10.7, pytest-8.3.5, pluggy-1.5.0
+rootdir: /app
+plugins: cov-6.1.1
+collected 9 items
+
+test_app.py ........                                                     [ 88%]
+test_resource_1.py .                                                     [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.10.7-final-0 ________________
+
+Name                 Stmts   Miss  Cover
+----------------------------------------
+app.py                   9      1    89%
+resource_1.py            9      3    67%
+test_app.py             41      1    98%
+test_resource_1.py      15      1    93%
+----------------------------------------
+TOTAL                   74      6    92%
+Coverage XML written to file coverage.xml
+============================== 9 passed in 0.66s ===============================
+</code></pre></div>
+                        <div><strong>Test Code:</strong> <pre><code class="language-python">def test_home_options_method(self):
+    # Test OPTIONS method on the home route
+    response = self.app.options('/')
+    self.assertEqual(response.status_code, 200)
+    # Check that Allow header indicates GET is allowed
+    self.assertIn('GET', response.headers.get('Allow', ''))
+    # Verify other common methods in the Allow header
+    self.assertIn('HEAD', response.headers.get('Allow', ''))
+    self.assertIn('OPTIONS', response.headers.get('Allow', ''))
+</code></pre></div>
+                        <div><strong>Imports:</strong> <pre><code class="language-python"></code></pre></div>
+                    </details>
+                </td>
+            </tr>
+            
+            <tr>
+                <td class="status-PASS">PASS</td>
+                <td></td>
+                <td>0</td>
+                <td>python</td>
+                <td>
+                    <details>
+                        <summary>View Full Code</summary>
+                        <pre><code><span class="diff-unchanged">  import unittest</span>
+<span class="diff-unchanged">  from app import app</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  class AppTests(unittest.TestCase):</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def setUp(self):</span>
+<span class="diff-unchanged">          # Set up the test client</span>
+<span class="diff-unchanged">          self.app = app.test_client()</span>
+<span class="diff-unchanged">          self.app.testing = True</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home(self):</span>
+<span class="diff-unchanged">          # Test the home route</span>
+<span class="diff-unchanged">          response = self.app.get('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_content_type(self):</span>
+<span class="diff-unchanged">          # Test the Content-Type header for the home route</span>
+<span class="diff-unchanged">          response = self.app.get('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.content_type, 'application/json')</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_delete_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test DELETE method on the home route</span>
+<span class="diff-unchanged">          response = self.app.delete('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_put_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test PUT method on the home route</span>
+<span class="diff-unchanged">          response = self.app.put('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_post_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test POST method on the home route</span>
+<span class="diff-unchanged">          response = self.app.post('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          # Check that Allow header indicates GET is allowed (and potentially HEAD, OPTIONS)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_with_query_params(self):</span>
+<span class="diff-unchanged">          # Test the home route with unexpected query parameters</span>
+<span class="diff-unchanged">          response = self.app.get('/?param1=value1&param2=value2')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_nonexistent_route(self):</span>
+<span class="diff-unchanged">          # Test accessing a non-existent route</span>
+<span class="diff-unchanged">          response = self.app.get('/nonexistent_route')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 404)</span>
+<span class="diff-unchanged">          # Optionally, check for specific content in the 404 page if customized</span>
+<span class="diff-unchanged">          # self.assertIn(b"Not Found", response.data) # Flask's default 404 page contains this</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-added">+     def test_home_head_method(self):</span>
+<span class="diff-added">+         # Test HEAD method on the home route</span>
+<span class="diff-added">+         head_response = self.app.head('/')</span>
+<span class="diff-added">+         get_response = self.app.get('/')</span>
+<span class="diff-added">+         </span>
+<span class="diff-added">+         # Status code should be 200</span>
+<span class="diff-added">+         self.assertEqual(head_response.status_code, 200)</span>
+<span class="diff-added">+         </span>
+<span class="diff-added">+         # HEAD should have same headers as GET</span>
+<span class="diff-added">+         self.assertEqual(head_response.content_type, get_response.content_type)</span>
+<span class="diff-added">+         </span>
+<span class="diff-added">+         # HEAD should have no body content</span>
+<span class="diff-added">+         self.assertEqual(head_response.data, b'')</span>
+<span class="diff-added">+ </span>
+<span class="diff-added">+ </span>
+<span class="diff-unchanged">      def test_home_options_method(self):</span>
+<span class="diff-unchanged">          # Test OPTIONS method on the home route</span>
+<span class="diff-unchanged">          response = self.app.options('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          # Check that Allow header indicates GET is allowed</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">          # Verify other common methods in the Allow header</span>
+<span class="diff-unchanged">          self.assertIn('HEAD', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">          self.assertIn('OPTIONS', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  if __name__ == '__main__':</span>
+<span class="diff-unchanged">      unittest.main()</span></code></pre>
+                    </details>
+                </td>
+                <td>
+                    <details>
+                        <summary>View More</summary>
+                        <div><strong>STDERR:</strong> <pre><code class="language-python"></code></pre></div>
+                        <div><strong>STDOUT:</strong> <pre><code class="language-python">============================= test session starts ==============================
+platform linux -- Python 3.10.7, pytest-8.3.5, pluggy-1.5.0
+rootdir: /app
+plugins: cov-6.1.1
+collected 10 items
+
+test_app.py .........                                                    [ 90%]
+test_resource_1.py .                                                     [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.10.7-final-0 ________________
+
+Name                 Stmts   Miss  Cover
+----------------------------------------
+app.py                   9      1    89%
+resource_1.py            9      3    67%
+test_app.py             47      1    98%
+test_resource_1.py      15      1    93%
+----------------------------------------
+TOTAL                   80      6    92%
+Coverage XML written to file coverage.xml
+============================== 10 passed in 0.61s ==============================
+</code></pre></div>
+                        <div><strong>Test Code:</strong> <pre><code class="language-python">def test_home_head_method(self):
+    # Test HEAD method on the home route
+    head_response = self.app.head('/')
+    get_response = self.app.get('/')
+    
+    # Status code should be 200
+    self.assertEqual(head_response.status_code, 200)
+    
+    # HEAD should have same headers as GET
+    self.assertEqual(head_response.content_type, get_response.content_type)
+    
+    # HEAD should have no body content
+    self.assertEqual(head_response.data, b'')
+</code></pre></div>
+                        <div><strong>Imports:</strong> <pre><code class="language-python"></code></pre></div>
+                    </details>
+                </td>
+            </tr>
+            
+            <tr>
+                <td class="status-PASS">PASS</td>
+                <td></td>
+                <td>0</td>
+                <td>python</td>
+                <td>
+                    <details>
+                        <summary>View Full Code</summary>
+                        <pre><code><span class="diff-unchanged">  import unittest</span>
+<span class="diff-unchanged">  from app import app</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  class AppTests(unittest.TestCase):</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def setUp(self):</span>
+<span class="diff-unchanged">          # Set up the test client</span>
+<span class="diff-unchanged">          self.app = app.test_client()</span>
+<span class="diff-unchanged">          self.app.testing = True</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home(self):</span>
+<span class="diff-unchanged">          # Test the home route</span>
+<span class="diff-unchanged">          response = self.app.get('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_content_type(self):</span>
+<span class="diff-unchanged">          # Test the Content-Type header for the home route</span>
+<span class="diff-unchanged">          response = self.app.get('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.content_type, 'application/json')</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_delete_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test DELETE method on the home route</span>
+<span class="diff-unchanged">          response = self.app.delete('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_put_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test PUT method on the home route</span>
+<span class="diff-unchanged">          response = self.app.put('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_post_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test POST method on the home route</span>
+<span class="diff-unchanged">          response = self.app.post('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          # Check that Allow header indicates GET is allowed (and potentially HEAD, OPTIONS)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_with_query_params(self):</span>
+<span class="diff-unchanged">          # Test the home route with unexpected query parameters</span>
+<span class="diff-unchanged">          response = self.app.get('/?param1=value1&param2=value2')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_nonexistent_route(self):</span>
+<span class="diff-unchanged">          # Test accessing a non-existent route</span>
+<span class="diff-unchanged">          response = self.app.get('/nonexistent_route')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 404)</span>
+<span class="diff-unchanged">          # Optionally, check for specific content in the 404 page if customized</span>
+<span class="diff-unchanged">          # self.assertIn(b"Not Found", response.data) # Flask's default 404 page contains this</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-added">+     def test_home_patch_not_allowed(self):</span>
+<span class="diff-added">+         # Test PATCH method on the home route</span>
+<span class="diff-added">+         response = self.app.patch('/')</span>
+<span class="diff-added">+         self.assertEqual(response.status_code, 405)</span>
+<span class="diff-added">+         # Check that Allow header indicates GET is allowed</span>
+<span class="diff-added">+         self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-added">+ </span>
+<span class="diff-added">+ </span>
+<span class="diff-unchanged">      def test_home_head_method(self):</span>
+<span class="diff-unchanged">          # Test HEAD method on the home route</span>
+<span class="diff-unchanged">          head_response = self.app.head('/')</span>
+<span class="diff-unchanged">          get_response = self.app.get('/')</span>
+<span class="diff-unchanged">          </span>
+<span class="diff-unchanged">          # Status code should be 200</span>
+<span class="diff-unchanged">          self.assertEqual(head_response.status_code, 200)</span>
+<span class="diff-unchanged">          </span>
+<span class="diff-unchanged">          # HEAD should have same headers as GET</span>
+<span class="diff-unchanged">          self.assertEqual(head_response.content_type, get_response.content_type)</span>
+<span class="diff-unchanged">          </span>
+<span class="diff-unchanged">          # HEAD should have no body content</span>
+<span class="diff-unchanged">          self.assertEqual(head_response.data, b'')</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_options_method(self):</span>
+<span class="diff-unchanged">          # Test OPTIONS method on the home route</span>
+<span class="diff-unchanged">          response = self.app.options('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          # Check that Allow header indicates GET is allowed</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">          # Verify other common methods in the Allow header</span>
+<span class="diff-unchanged">          self.assertIn('HEAD', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">          self.assertIn('OPTIONS', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  if __name__ == '__main__':</span>
+<span class="diff-unchanged">      unittest.main()</span></code></pre>
+                    </details>
+                </td>
+                <td>
+                    <details>
+                        <summary>View More</summary>
+                        <div><strong>STDERR:</strong> <pre><code class="language-python"></code></pre></div>
+                        <div><strong>STDOUT:</strong> <pre><code class="language-python">============================= test session starts ==============================
+platform linux -- Python 3.10.7, pytest-8.3.5, pluggy-1.5.0
+rootdir: /app
+plugins: cov-6.1.1
+collected 11 items
+
+test_app.py ..........                                                   [ 90%]
+test_resource_1.py .                                                     [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.10.7-final-0 ________________
+
+Name                 Stmts   Miss  Cover
+----------------------------------------
+app.py                   9      1    89%
+resource_1.py            9      3    67%
+test_app.py             51      1    98%
+test_resource_1.py      15      1    93%
+----------------------------------------
+TOTAL                   84      6    93%
+Coverage XML written to file coverage.xml
+============================== 11 passed in 0.64s ==============================
+</code></pre></div>
+                        <div><strong>Test Code:</strong> <pre><code class="language-python">def test_home_patch_not_allowed(self):
+    # Test PATCH method on the home route
+    response = self.app.patch('/')
+    self.assertEqual(response.status_code, 405)
+    # Check that Allow header indicates GET is allowed
+    self.assertIn('GET', response.headers.get('Allow', ''))
+</code></pre></div>
+                        <div><strong>Imports:</strong> <pre><code class="language-python"></code></pre></div>
+                    </details>
+                </td>
+            </tr>
+            
+            <tr>
+                <td class="status-PASS">PASS</td>
+                <td></td>
+                <td>0</td>
+                <td>python</td>
+                <td>
+                    <details>
+                        <summary>View Full Code</summary>
+                        <pre><code><span class="diff-unchanged">  import unittest</span>
+<span class="diff-unchanged">  from app import app</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  class AppTests(unittest.TestCase):</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def setUp(self):</span>
+<span class="diff-unchanged">          # Set up the test client</span>
+<span class="diff-unchanged">          self.app = app.test_client()</span>
+<span class="diff-unchanged">          self.app.testing = True</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home(self):</span>
+<span class="diff-unchanged">          # Test the home route</span>
+<span class="diff-unchanged">          response = self.app.get('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_content_type(self):</span>
+<span class="diff-unchanged">          # Test the Content-Type header for the home route</span>
+<span class="diff-unchanged">          response = self.app.get('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.content_type, 'application/json')</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_delete_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test DELETE method on the home route</span>
+<span class="diff-unchanged">          response = self.app.delete('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_put_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test PUT method on the home route</span>
+<span class="diff-unchanged">          response = self.app.put('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_post_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test POST method on the home route</span>
+<span class="diff-unchanged">          response = self.app.post('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          # Check that Allow header indicates GET is allowed (and potentially HEAD, OPTIONS)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_with_query_params(self):</span>
+<span class="diff-unchanged">          # Test the home route with unexpected query parameters</span>
+<span class="diff-unchanged">          response = self.app.get('/?param1=value1&param2=value2')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_nonexistent_route(self):</span>
+<span class="diff-unchanged">          # Test accessing a non-existent route</span>
+<span class="diff-unchanged">          response = self.app.get('/nonexistent_route')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 404)</span>
+<span class="diff-unchanged">          # Optionally, check for specific content in the 404 page if customized</span>
+<span class="diff-unchanged">          # self.assertIn(b"Not Found", response.data) # Flask's default 404 page contains this</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-added">+     def test_home_with_extremely_long_query_params(self):</span>
+<span class="diff-added">+         # Create an extremely long query parameter (10,000+ characters)</span>
+<span class="diff-added">+         long_value = 'a' * 10000</span>
+<span class="diff-added">+         url = f'/?param={long_value}'</span>
+<span class="diff-added">+         </span>
+<span class="diff-added">+         # Test the home route with the long query parameter</span>
+<span class="diff-added">+         response = self.app.get(url)</span>
+<span class="diff-added">+         </span>
+<span class="diff-added">+         # Application should handle it normally</span>
+<span class="diff-added">+         self.assertEqual(response.status_code, 200)</span>
+<span class="diff-added">+         self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})</span>
+<span class="diff-added">+ </span>
+<span class="diff-added">+ </span>
+<span class="diff-unchanged">      def test_home_patch_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test PATCH method on the home route</span>
+<span class="diff-unchanged">          response = self.app.patch('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          # Check that Allow header indicates GET is allowed</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_head_method(self):</span>
+<span class="diff-unchanged">          # Test HEAD method on the home route</span>
+<span class="diff-unchanged">          head_response = self.app.head('/')</span>
+<span class="diff-unchanged">          get_response = self.app.get('/')</span>
+<span class="diff-unchanged">          </span>
+<span class="diff-unchanged">          # Status code should be 200</span>
+<span class="diff-unchanged">          self.assertEqual(head_response.status_code, 200)</span>
+<span class="diff-unchanged">          </span>
+<span class="diff-unchanged">          # HEAD should have same headers as GET</span>
+<span class="diff-unchanged">          self.assertEqual(head_response.content_type, get_response.content_type)</span>
+<span class="diff-unchanged">          </span>
+<span class="diff-unchanged">          # HEAD should have no body content</span>
+<span class="diff-unchanged">          self.assertEqual(head_response.data, b'')</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_options_method(self):</span>
+<span class="diff-unchanged">          # Test OPTIONS method on the home route</span>
+<span class="diff-unchanged">          response = self.app.options('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          # Check that Allow header indicates GET is allowed</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">          # Verify other common methods in the Allow header</span>
+<span class="diff-unchanged">          self.assertIn('HEAD', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">          self.assertIn('OPTIONS', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  if __name__ == '__main__':</span>
+<span class="diff-unchanged">      unittest.main()</span></code></pre>
+                    </details>
+                </td>
+                <td>
+                    <details>
+                        <summary>View More</summary>
+                        <div><strong>STDERR:</strong> <pre><code class="language-python"></code></pre></div>
+                        <div><strong>STDOUT:</strong> <pre><code class="language-python">============================= test session starts ==============================
+platform linux -- Python 3.10.7, pytest-8.3.5, pluggy-1.5.0
+rootdir: /app
+plugins: cov-6.1.1
+collected 12 items
+
+test_app.py ...........                                                  [ 91%]
+test_resource_1.py .                                                     [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.10.7-final-0 ________________
+
+Name                 Stmts   Miss  Cover
+----------------------------------------
+app.py                   9      1    89%
+resource_1.py            9      3    67%
+test_app.py             57      1    98%
+test_resource_1.py      15      1    93%
+----------------------------------------
+TOTAL                   90      6    93%
+Coverage XML written to file coverage.xml
+============================== 12 passed in 0.59s ==============================
+</code></pre></div>
+                        <div><strong>Test Code:</strong> <pre><code class="language-python">def test_home_with_extremely_long_query_params(self):
+    # Create an extremely long query parameter (10,000+ characters)
+    long_value = 'a' * 10000
+    url = f'/?param={long_value}'
+    
+    # Test the home route with the long query parameter
+    response = self.app.get(url)
+    
+    # Application should handle it normally
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})
+</code></pre></div>
+                        <div><strong>Imports:</strong> <pre><code class="language-python"></code></pre></div>
+                    </details>
+                </td>
+            </tr>
+            
+            <tr>
+                <td class="status-FAIL">FAIL</td>
+                <td>Test failed</td>
+                <td>1</td>
+                <td>python</td>
+                <td>
+                    <details>
+                        <summary>View Full Code</summary>
+                        <pre><code><span class="diff-unchanged">  import unittest</span>
+<span class="diff-unchanged">  from app import app</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  class AppTests(unittest.TestCase):</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def setUp(self):</span>
+<span class="diff-unchanged">          # Set up the test client</span>
+<span class="diff-unchanged">          self.app = app.test_client()</span>
+<span class="diff-unchanged">          self.app.testing = True</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home(self):</span>
+<span class="diff-unchanged">          # Test the home route</span>
+<span class="diff-unchanged">          response = self.app.get('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_content_type(self):</span>
+<span class="diff-unchanged">          # Test the Content-Type header for the home route</span>
+<span class="diff-unchanged">          response = self.app.get('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.content_type, 'application/json')</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_delete_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test DELETE method on the home route</span>
+<span class="diff-unchanged">          response = self.app.delete('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_put_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test PUT method on the home route</span>
+<span class="diff-unchanged">          response = self.app.put('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_post_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test POST method on the home route</span>
+<span class="diff-unchanged">          response = self.app.post('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          # Check that Allow header indicates GET is allowed (and potentially HEAD, OPTIONS)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_with_query_params(self):</span>
+<span class="diff-unchanged">          # Test the home route with unexpected query parameters</span>
+<span class="diff-unchanged">          response = self.app.get('/?param1=value1&param2=value2')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_nonexistent_route(self):</span>
+<span class="diff-unchanged">          # Test accessing a non-existent route</span>
+<span class="diff-unchanged">          response = self.app.get('/nonexistent_route')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 404)</span>
+<span class="diff-unchanged">          # Optionally, check for specific content in the 404 page if customized</span>
+<span class="diff-unchanged">          # self.assertIn(b"Not Found", response.data) # Flask's default 404 page contains this</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-added">+     def test_home_with_malformed_headers(self):</span>
+<span class="diff-added">+         # Test with various malformed headers</span>
+<span class="diff-added">+         headers = {</span>
+<span class="diff-added">+             'Content-Type': 'application/json\r\nX-Injected-Header: value',  # Header injection attempt</span>
+<span class="diff-added">+             'X-Malformed-Header': 'a' * 10000,  # Extremely long header value</span>
+<span class="diff-added">+             'X-Empty-Header': '',  # Empty header value</span>
+<span class="diff-added">+             'X-Null-Header': None,  # None value</span>
+<span class="diff-added">+             '': 'Empty key',  # Empty header key</span>
+<span class="diff-added">+         }</span>
+<span class="diff-added">+         </span>
+<span class="diff-added">+         response = self.app.get('/', headers=headers)</span>
+<span class="diff-added">+         </span>
+<span class="diff-added">+         # Application should handle the request normally despite malformed headers</span>
+<span class="diff-added">+         self.assertEqual(response.status_code, 200)</span>
+<span class="diff-added">+         self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})</span>
+<span class="diff-added">+ </span>
+<span class="diff-added">+ </span>
+<span class="diff-unchanged">      def test_home_with_extremely_long_query_params(self):</span>
+<span class="diff-unchanged">          # Create an extremely long query parameter (10,000+ characters)</span>
+<span class="diff-unchanged">          long_value = 'a' * 10000</span>
+<span class="diff-unchanged">          url = f'/?param={long_value}'</span>
+<span class="diff-unchanged">          </span>
+<span class="diff-unchanged">          # Test the home route with the long query parameter</span>
+<span class="diff-unchanged">          response = self.app.get(url)</span>
+<span class="diff-unchanged">          </span>
+<span class="diff-unchanged">          # Application should handle it normally</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_patch_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test PATCH method on the home route</span>
+<span class="diff-unchanged">          response = self.app.patch('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          # Check that Allow header indicates GET is allowed</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_head_method(self):</span>
+<span class="diff-unchanged">          # Test HEAD method on the home route</span>
+<span class="diff-unchanged">          head_response = self.app.head('/')</span>
+<span class="diff-unchanged">          get_response = self.app.get('/')</span>
+<span class="diff-unchanged">          </span>
+<span class="diff-unchanged">          # Status code should be 200</span>
+<span class="diff-unchanged">          self.assertEqual(head_response.status_code, 200)</span>
+<span class="diff-unchanged">          </span>
+<span class="diff-unchanged">          # HEAD should have same headers as GET</span>
+<span class="diff-unchanged">          self.assertEqual(head_response.content_type, get_response.content_type)</span>
+<span class="diff-unchanged">          </span>
+<span class="diff-unchanged">          # HEAD should have no body content</span>
+<span class="diff-unchanged">          self.assertEqual(head_response.data, b'')</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_options_method(self):</span>
+<span class="diff-unchanged">          # Test OPTIONS method on the home route</span>
+<span class="diff-unchanged">          response = self.app.options('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          # Check that Allow header indicates GET is allowed</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">          # Verify other common methods in the Allow header</span>
+<span class="diff-unchanged">          self.assertIn('HEAD', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">          self.assertIn('OPTIONS', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  if __name__ == '__main__':</span>
+<span class="diff-unchanged">      unittest.main()</span></code></pre>
+                    </details>
+                </td>
+                <td>
+                    <details>
+                        <summary>View More</summary>
+                        <div><strong>STDERR:</strong> <pre><code class="language-python"></code></pre></div>
+                        <div><strong>STDOUT:</strong> <pre><code class="language-python">============================= test session starts ==============================
+platform linux -- Python 3.10.7, pytest-8.3.5, pluggy-1.5.0
+rootdir: /app
+plugins: cov-6.1.1
+collected 13 items
+
+test_app.py .........F..                                                 [ 92%]
+test_resource_1.py .                                                     [100%]
+
+=================================== FAILURES ===================================
+__________________ AppTests.test_home_with_malformed_headers ___________________
+
+self = <test_app.AppTests testMethod=test_home_with_malformed_headers>
+
+    def test_home_with_malformed_headers(self):
+        # Test with various malformed headers
+        headers = {
+            'Content-Type': 'application/json\r\nX-Injected-Header: value',  # Header injection attempt
+            'X-Malformed-Header': 'a' * 10000,  # Extremely long header value
+            'X-Empty-Header': '',  # Empty header value
+            'X-Null-Header': None,  # None value
+            '': 'Empty key',  # Empty header key
+        }
+    
+>       response = self.app.get('/', headers=headers)
+
+test_app.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.10/site-packages/werkzeug/test.py:1162: in get
+    return self.open(*args, **kw)
+/usr/local/lib/python3.10/site-packages/flask/testing.py:227: in open
+    request = self._request_from_builder_args(args, kwargs)
+/usr/local/lib/python3.10/site-packages/flask/testing.py:196: in _request_from_builder_args
+    builder = EnvironBuilder(self.application, *args, **kwargs)
+/usr/local/lib/python3.10/site-packages/flask/testing.py:85: in __init__
+    super().__init__(path, base_url, *args, **kwargs)
+/usr/local/lib/python3.10/site-packages/werkzeug/test.py:342: in __init__
+    headers = Headers(headers)
+/usr/local/lib/python3.10/site-packages/werkzeug/datastructures/headers.py:73: in __init__
+    self.extend(defaults)
+/usr/local/lib/python3.10/site-packages/werkzeug/datastructures/headers.py:252: in extend
+    self.add(key, value)
+/usr/local/lib/python3.10/site-packages/werkzeug/datastructures/headers.py:360: in add
+    value_str = _str_header_value(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = 'application/json\r\nX-Injected-Header: value'
+
+    def _str_header_value(value: t.Any) -> str:
+        if not isinstance(value, str):
+            value = str(value)
+    
+        if _newline_re.search(value) is not None:
+>           raise ValueError("Header values must not contain newline characters.")
+E           ValueError: Header values must not contain newline characters.
+
+/usr/local/lib/python3.10/site-packages/werkzeug/datastructures/headers.py:600: ValueError
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.10.7-final-0 ________________
+
+Name                 Stmts   Miss  Cover
+----------------------------------------
+app.py                   9      1    89%
+resource_1.py            9      3    67%
+test_app.py             62      3    95%
+test_resource_1.py      15      1    93%
+----------------------------------------
+TOTAL                   95      8    92%
+Coverage XML written to file coverage.xml
+=========================== short test summary info ============================
+FAILED test_app.py::AppTests::test_home_with_malformed_headers - ValueError: ...
+========================= 1 failed, 12 passed in 1.02s =========================
+</code></pre></div>
+                        <div><strong>Test Code:</strong> <pre><code class="language-python">def test_home_with_malformed_headers(self):
+    # Test with various malformed headers
+    headers = {
+        'Content-Type': 'application/json\r\nX-Injected-Header: value',  # Header injection attempt
+        'X-Malformed-Header': 'a' * 10000,  # Extremely long header value
+        'X-Empty-Header': '',  # Empty header value
+        'X-Null-Header': None,  # None value
+        '': 'Empty key',  # Empty header key
+    }
+    
+    response = self.app.get('/', headers=headers)
+    
+    # Application should handle the request normally despite malformed headers
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})
+</code></pre></div>
+                        <div><strong>Imports:</strong> <pre><code class="language-python"></code></pre></div>
+                    </details>
+                </td>
+            </tr>
+            
+            <tr>
+                <td class="status-PASS">PASS</td>
+                <td></td>
+                <td>0</td>
+                <td>python</td>
+                <td>
+                    <details>
+                        <summary>View Full Code</summary>
+                        <pre><code><span class="diff-unchanged">  import unittest</span>
+<span class="diff-unchanged">  from app import app</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  class AppTests(unittest.TestCase):</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def setUp(self):</span>
+<span class="diff-unchanged">          # Set up the test client</span>
+<span class="diff-unchanged">          self.app = app.test_client()</span>
+<span class="diff-unchanged">          self.app.testing = True</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home(self):</span>
+<span class="diff-unchanged">          # Test the home route</span>
+<span class="diff-unchanged">          response = self.app.get('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_content_type(self):</span>
+<span class="diff-unchanged">          # Test the Content-Type header for the home route</span>
+<span class="diff-unchanged">          response = self.app.get('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.content_type, 'application/json')</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_delete_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test DELETE method on the home route</span>
+<span class="diff-unchanged">          response = self.app.delete('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_put_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test PUT method on the home route</span>
+<span class="diff-unchanged">          response = self.app.put('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_post_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test POST method on the home route</span>
+<span class="diff-unchanged">          response = self.app.post('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          # Check that Allow header indicates GET is allowed (and potentially HEAD, OPTIONS)</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_with_query_params(self):</span>
+<span class="diff-unchanged">          # Test the home route with unexpected query parameters</span>
+<span class="diff-unchanged">          response = self.app.get('/?param1=value1&param2=value2')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_nonexistent_route(self):</span>
+<span class="diff-unchanged">          # Test accessing a non-existent route</span>
+<span class="diff-unchanged">          response = self.app.get('/nonexistent_route')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 404)</span>
+<span class="diff-unchanged">          # Optionally, check for specific content in the 404 page if customized</span>
+<span class="diff-unchanged">          # self.assertIn(b"Not Found", response.data) # Flask's default 404 page contains this</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-added">+     def test_path_traversal_vulnerability(self):</span>
+<span class="diff-added">+         # Test various path traversal attempts</span>
+<span class="diff-added">+         traversal_paths = [</span>
+<span class="diff-added">+             '/../../../etc/passwd',</span>
+<span class="diff-added">+             '/..%2f..%2f..%2fetc%2fpasswd',  # URL encoded</span>
+<span class="diff-added">+             '/%2e%2e/%2e%2e/%2e%2e/etc/passwd',  # Double URL encoded</span>
+<span class="diff-added">+             '/static/../../../../etc/passwd',</span>
+<span class="diff-added">+             '/.%2e/.%2e/.%2e/.%2e/etc/passwd',  # Mixed encoding</span>
+<span class="diff-added">+         ]</span>
+<span class="diff-added">+         </span>
+<span class="diff-added">+         for path in traversal_paths:</span>
+<span class="diff-added">+             response = self.app.get(path)</span>
+<span class="diff-added">+             </span>
+<span class="diff-added">+             # Should return 404 Not Found without exposing sensitive information</span>
+<span class="diff-added">+             self.assertIn(response.status_code, [404, 400])</span>
+<span class="diff-added">+             </span>
+<span class="diff-added">+             # Ensure no sensitive content is leaked</span>
+<span class="diff-added">+             if response.data:</span>
+<span class="diff-added">+                 self.assertNotIn(b'/etc/passwd', response.data)</span>
+<span class="diff-added">+                 self.assertNotIn(b'root:', response.data)</span>
+<span class="diff-added">+ </span>
+<span class="diff-added">+ </span>
+<span class="diff-unchanged">      def test_home_with_extremely_long_query_params(self):</span>
+<span class="diff-unchanged">          # Create an extremely long query parameter (10,000+ characters)</span>
+<span class="diff-unchanged">          long_value = 'a' * 10000</span>
+<span class="diff-unchanged">          url = f'/?param={long_value}'</span>
+<span class="diff-unchanged">          </span>
+<span class="diff-unchanged">          # Test the home route with the long query parameter</span>
+<span class="diff-unchanged">          response = self.app.get(url)</span>
+<span class="diff-unchanged">          </span>
+<span class="diff-unchanged">          # Application should handle it normally</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_patch_not_allowed(self):</span>
+<span class="diff-unchanged">          # Test PATCH method on the home route</span>
+<span class="diff-unchanged">          response = self.app.patch('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 405)</span>
+<span class="diff-unchanged">          # Check that Allow header indicates GET is allowed</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_head_method(self):</span>
+<span class="diff-unchanged">          # Test HEAD method on the home route</span>
+<span class="diff-unchanged">          head_response = self.app.head('/')</span>
+<span class="diff-unchanged">          get_response = self.app.get('/')</span>
+<span class="diff-unchanged">          </span>
+<span class="diff-unchanged">          # Status code should be 200</span>
+<span class="diff-unchanged">          self.assertEqual(head_response.status_code, 200)</span>
+<span class="diff-unchanged">          </span>
+<span class="diff-unchanged">          # HEAD should have same headers as GET</span>
+<span class="diff-unchanged">          self.assertEqual(head_response.content_type, get_response.content_type)</span>
+<span class="diff-unchanged">          </span>
+<span class="diff-unchanged">          # HEAD should have no body content</span>
+<span class="diff-unchanged">          self.assertEqual(head_response.data, b'')</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">      def test_home_options_method(self):</span>
+<span class="diff-unchanged">          # Test OPTIONS method on the home route</span>
+<span class="diff-unchanged">          response = self.app.options('/')</span>
+<span class="diff-unchanged">          self.assertEqual(response.status_code, 200)</span>
+<span class="diff-unchanged">          # Check that Allow header indicates GET is allowed</span>
+<span class="diff-unchanged">          self.assertIn('GET', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">          # Verify other common methods in the Allow header</span>
+<span class="diff-unchanged">          self.assertIn('HEAD', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">          self.assertIn('OPTIONS', response.headers.get('Allow', ''))</span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  </span>
+<span class="diff-unchanged">  if __name__ == '__main__':</span>
+<span class="diff-unchanged">      unittest.main()</span></code></pre>
+                    </details>
+                </td>
+                <td>
+                    <details>
+                        <summary>View More</summary>
+                        <div><strong>STDERR:</strong> <pre><code class="language-python"></code></pre></div>
+                        <div><strong>STDOUT:</strong> <pre><code class="language-python">============================= test session starts ==============================
+platform linux -- Python 3.10.7, pytest-8.3.5, pluggy-1.5.0
+rootdir: /app
+plugins: cov-6.1.1
+collected 13 items
+
+test_app.py ............                                                 [ 92%]
+test_resource_1.py .                                                     [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.10.7-final-0 ________________
+
+Name                 Stmts   Miss  Cover
+----------------------------------------
+app.py                   9      1    89%
+resource_1.py            9      3    67%
+test_app.py             65      1    98%
+test_resource_1.py      15      1    93%
+----------------------------------------
+TOTAL                   98      6    94%
+Coverage XML written to file coverage.xml
+============================== 13 passed in 0.61s ==============================
+</code></pre></div>
+                        <div><strong>Test Code:</strong> <pre><code class="language-python">def test_path_traversal_vulnerability(self):
+    # Test various path traversal attempts
+    traversal_paths = [
+        '/../../../etc/passwd',
+        '/..%2f..%2f..%2fetc%2fpasswd',  # URL encoded
+        '/%2e%2e/%2e%2e/%2e%2e/etc/passwd',  # Double URL encoded
+        '/static/../../../../etc/passwd',
+        '/.%2e/.%2e/.%2e/.%2e/etc/passwd',  # Mixed encoding
+    ]
+    
+    for path in traversal_paths:
+        response = self.app.get(path)
+        
+        # Should return 404 Not Found without exposing sensitive information
+        self.assertIn(response.status_code, [404, 400])
+        
+        # Ensure no sensitive content is leaked
+        if response.data:
+            self.assertNotIn(b'/etc/passwd', response.data)
+            self.assertNotIn(b'root:', response.data)
+</code></pre></div>
+                        <div><strong>Imports:</strong> <pre><code class="language-python"></code></pre></div>
+                    </details>
+                </td>
+            </tr>
+            
         </table>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js"></script>
     </body>

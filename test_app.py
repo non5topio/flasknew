@@ -58,5 +58,74 @@ class AppTests(unittest.TestCase):
         # self.assertIn(b"Not Found", response.data) # Flask's default 404 page contains this
 
 
+    def test_path_traversal_vulnerability(self):
+        # Test various path traversal attempts
+        traversal_paths = [
+            '/../../../etc/passwd',
+            '/..%2f..%2f..%2fetc%2fpasswd',  # URL encoded
+            '/%2e%2e/%2e%2e/%2e%2e/etc/passwd',  # Double URL encoded
+            '/static/../../../../etc/passwd',
+            '/.%2e/.%2e/.%2e/.%2e/etc/passwd',  # Mixed encoding
+        ]
+        
+        for path in traversal_paths:
+            response = self.app.get(path)
+            
+            # Should return 404 Not Found without exposing sensitive information
+            self.assertIn(response.status_code, [404, 400])
+            
+            # Ensure no sensitive content is leaked
+            if response.data:
+                self.assertNotIn(b'/etc/passwd', response.data)
+                self.assertNotIn(b'root:', response.data)
+
+
+    def test_home_with_extremely_long_query_params(self):
+        # Create an extremely long query parameter (10,000+ characters)
+        long_value = 'a' * 10000
+        url = f'/?param={long_value}'
+        
+        # Test the home route with the long query parameter
+        response = self.app.get(url)
+        
+        # Application should handle it normally
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})
+
+
+    def test_home_patch_not_allowed(self):
+        # Test PATCH method on the home route
+        response = self.app.patch('/')
+        self.assertEqual(response.status_code, 405)
+        # Check that Allow header indicates GET is allowed
+        self.assertIn('GET', response.headers.get('Allow', ''))
+
+
+    def test_home_head_method(self):
+        # Test HEAD method on the home route
+        head_response = self.app.head('/')
+        get_response = self.app.get('/')
+        
+        # Status code should be 200
+        self.assertEqual(head_response.status_code, 200)
+        
+        # HEAD should have same headers as GET
+        self.assertEqual(head_response.content_type, get_response.content_type)
+        
+        # HEAD should have no body content
+        self.assertEqual(head_response.data, b'')
+
+
+    def test_home_options_method(self):
+        # Test OPTIONS method on the home route
+        response = self.app.options('/')
+        self.assertEqual(response.status_code, 200)
+        # Check that Allow header indicates GET is allowed
+        self.assertIn('GET', response.headers.get('Allow', ''))
+        # Verify other common methods in the Allow header
+        self.assertIn('HEAD', response.headers.get('Allow', ''))
+        self.assertIn('OPTIONS', response.headers.get('Allow', ''))
+
+
 if __name__ == '__main__':
     unittest.main()

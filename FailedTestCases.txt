@@ -1,1 +1,19 @@
 This is a newly created file.
+
+def test_home_with_malformed_headers(self):
+    # Test with various malformed headers
+    headers = {
+        'Content-Type': 'application/json\r\nX-Injected-Header: value',  # Header injection attempt
+        'X-Malformed-Header': 'a' * 10000,  # Extremely long header value
+        'X-Empty-Header': '',  # Empty header value
+        'X-Null-Header': None,  # None value
+        '': 'Empty key',  # Empty header key
+    }
+    
+    response = self.app.get('/', headers=headers)
+    
+    # Application should handle the request normally despite malformed headers
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.get_json(), {"message": "Welcome to the Flask App!"})
+
+
